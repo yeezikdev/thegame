@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Confluenza — il gioco dei numeri cooperativo</title>
+<title>Rise · Fall — il gioco dei numeri cooperativo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -77,20 +77,13 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
 }
 .brand{ display:flex; flex-direction:column; align-items:center; gap:10px; }
 .brand-mark{
-  display:flex; align-items:baseline; gap:2px; font-family:var(--font-display); font-weight:700;
-  font-size:clamp(40px,8vw,64px); line-height:1;
+  display:flex; align-items:baseline; gap:2px; font-family:var(--font-body); font-weight:700;
+  font-size:clamp(40px,8vw,64px); line-height:1; letter-spacing:-0.01em;
 }
 .brand-mark .rise{ color:var(--ascend); }
 .brand-mark .fall{ color:var(--descend); }
 .brand-mark .dot{ color:var(--ivory-dim); font-weight:500; }
-.brand-sub{ font-family:var(--font-mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--ivory-dim); opacity:.55; }
-
-.stair-glyph{ display:flex; align-items:flex-end; gap:6px; height:34px; margin-top:4px; }
-.stair-glyph i{ display:block; width:9px; border-radius:3px 3px 0 0; background:var(--ascend); opacity:.85; }
-.stair-glyph i:nth-child(1){height:10px;} .stair-glyph i:nth-child(2){height:18px;}
-.stair-glyph i:nth-child(3){height:26px;} .stair-glyph i:nth-child(4){height:34px;}
-.stair-glyph i:nth-child(5){height:26px; background:var(--descend);} .stair-glyph i:nth-child(6){height:18px; background:var(--descend);}
-.stair-glyph i:nth-child(7){height:10px; background:var(--descend);}
+.brand-sub{ font-family:var(--font-body); font-weight:600; font-size:15px; letter-spacing:.01em; color:var(--ivory-dim); opacity:.65; }
 
 .mode-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; width:100%; max-width:760px; }
 .mode-card{
@@ -108,6 +101,12 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
 .mode-card .m-desc{ font-size:13px; color:var(--ivory-dim); opacity:.7; line-height:1.4; }
 .m-tag{ position:absolute; top:14px; right:14px; font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:100px; background:rgba(231,163,62,.15); color:var(--ascend); }
 .m-tag.soon{ background:rgba(247,241,228,.08); color:var(--ivory-dim); }
+.rules-card{ border-style:dashed; border-color:rgba(247,241,228,.16); width:100%; max-width:260px; }
+.rules-card .m-icon{ color:var(--descend); }
+.rules-card:hover{ border-color:rgba(85,128,224,.4) !important; }
+
+.home-footer{ margin-top:6px; padding-bottom:6px; }
+.share-icon{ display:inline-block; transform:translateY(-1px); margin-right:2px; }
 
 /* ================= SCREEN: SETUP ================= */
 #screen-setup{ flex:1; display:flex; align-items:center; justify-content:center; padding:32px 20px; }
@@ -203,12 +202,33 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
 .pile.desc .pile-card .accent-bar{ background:var(--descend); }
 .pile-hint{ font-family:var(--font-mono); font-size:10px; color:var(--ivory-dim); opacity:.45; min-height:14px; }
 
-.deck-info{ display:flex; align-items:center; gap:16px; }
-.deck-visual{ width:44px; height:60px; border-radius:9px; background:linear-gradient(160deg,#1c2b21,#0f1a13); border:1px solid rgba(247,241,228,.14); box-shadow:var(--shadow-card); position:relative; display:flex; align-items:center; justify-content:center; }
-.deck-visual::before, .deck-visual::after{ content:""; position:absolute; inset:0; border-radius:9px; border:1px solid rgba(247,241,228,.08); }
-.deck-visual::before{ transform:translate(3px,3px); z-index:-1;} .deck-visual::after{ transform:translate(6px,6px); z-index:-2;}
-.deck-visual span{ font-family:var(--font-mono); font-size:12px; color:var(--ivory-dim); }
-.deck-count-label{ font-family:var(--font-mono); font-size:11px; color:var(--ivory-dim); opacity:.6; text-align:center; }
+.deck-info{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+.deck-3d{ position:relative; width:80px; height:96px; display:flex; align-items:flex-end; justify-content:center; }
+.deck-ground-shadow{
+  position:absolute; bottom:2px; left:50%; width:52px; height:12px; border-radius:50%;
+  background:radial-gradient(ellipse, rgba(0,0,0,.55), transparent 72%);
+  transform:translateX(-50%); filter:blur(2px);
+  transition:opacity .4s ease, transform .4s ease;
+}
+.deck-layers{ position:relative; width:100%; height:100%; transform-origin:bottom center; }
+.deck-layers.settle{ animation:deckSettle .32s ease; }
+@keyframes deckSettle{ 0%{ transform:scale(1,1.07); } 55%{ transform:scale(1,.97); } 100%{ transform:scale(1,1); } }
+.deck-layer{
+  position:absolute; left:50%; bottom:6px; width:52px; height:72px; border-radius:9px;
+  background:linear-gradient(155deg,#193423,#0c1810);
+  border:1px solid rgba(231,163,62,.24);
+  box-shadow:0 1px 0 rgba(0,0,0,.4);
+  transition:filter .3s ease;
+}
+.deck-layer::after{
+  content:""; position:absolute; inset:9px; border:1px solid rgba(231,163,62,.16); border-radius:5px;
+}
+.deck-layer.top{
+  box-shadow:var(--shadow-card-lift);
+  border-color:rgba(231,163,62,.42);
+  display:flex; align-items:center; justify-content:center;
+}
+.deck-layer.top .deck-motif{ width:14px; height:14px; border:1.5px solid var(--ascend); transform:rotate(45deg); opacity:.75; }
 
 .hand-wrap{ padding:12px 0 max(14px, env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:10px; align-items:center; }
 .hand-strip{
@@ -266,6 +286,41 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 .toast.danger{ border-color:rgba(209,72,63,.5); color:#ffb3ae; }
 
+/* rules modal */
+.rules-modal{ max-width:520px; position:relative; text-align:left; max-height:min(640px, 84vh); }
+.rules-close{ position:absolute; top:18px; right:18px; }
+.rules-body{ display:flex; flex-direction:column; gap:14px; overflow-y:auto; max-height:min(420px, 52vh); padding-right:4px; margin-top:4px; }
+.rules-body::-webkit-scrollbar{ width:6px; }
+.rules-body::-webkit-scrollbar-thumb{ background:rgba(247,241,228,.15); border-radius:100px; }
+.rule-item{ display:flex; gap:14px; align-items:flex-start; font-size:14px; line-height:1.5; color:var(--ivory-dim); }
+.rule-item b{ color:var(--ivory); }
+.rule-icon{
+  flex-shrink:0; width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:600; font-size:13px; background:rgba(247,241,228,.06); border:1px solid rgba(247,241,228,.12);
+}
+.rule-icon.asc{ color:var(--ascend); border-color:rgba(231,163,62,.35); background:var(--ascend-soft); }
+.rule-icon.desc{ color:var(--descend); border-color:rgba(85,128,224,.35); background:var(--descend-soft); }
+.rule-icon.trick{ color:var(--gold-line); }
+.rule-icon.talk{ color:var(--ascend); border-color:rgba(231,163,62,.35); background:var(--ascend-soft); font-size:20px; font-family:var(--font-display); }
+.rule-icon.win{ color:var(--success); border-color:rgba(111,185,143,.35); background:rgba(111,185,143,.12); }
+.rule-icon.var{ font-size:10px; }
+
+/* share modal */
+.share-modal{ max-width:400px; }
+.qr-frame{
+  align-self:center; width:180px; height:180px; padding:12px; border-radius:16px;
+  background:var(--ivory); box-shadow:var(--shadow-card-lift); display:flex; align-items:center; justify-content:center;
+}
+.qr-frame img{ width:100%; height:100%; object-fit:contain; image-rendering:pixelated; }
+.link-row{ display:flex; gap:8px; align-items:center; }
+.link-row input{
+  flex:1; min-width:0; background:rgba(247,241,228,.06); border:1px solid rgba(247,241,228,.14); color:var(--ivory-dim);
+  padding:12px 14px; border-radius:12px; font-family:var(--font-mono); font-size:12.5px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.link-row .btn{ flex-shrink:0; padding:12px 18px; }
+.link-row .btn.copied{ background:var(--success); box-shadow:none; color:#0e1a14; }
+
 @media (min-width:640px){
   .pile-group{ gap:26px; }
   .hand-card{ width:72px; height:104px; font-size:27px; margin-left:-18px; }
@@ -281,28 +336,38 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
   <!-- ============ HOME ============ -->
   <section id="screen-home">
     <div class="brand">
-      <div class="brand-mark"><span class="rise">Su</span><span class="dot">&nbsp;·&nbsp;</span><span class="fall">Giù</span></div>
-      <div class="stair-glyph"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="brand-mark"><span class="rise">Rise</span><span class="dot">&nbsp;·&nbsp;</span><span class="fall">Fall</span></div>
       <div class="brand-sub">Un solo mazzo. Nessun avversario. Solo la sequenza.</div>
     </div>
     <div class="mode-grid">
-      <button class="mode-card" data-mode="ai">
-        <div class="m-icon">◐</div>
-        <div class="m-title">Contro l'IA</div>
-        <div class="m-desc">Sfida un'intelligenza artificiale su quattro livelli, da rilassato a spietato.</div>
-      </button>
-      <button class="mode-card" data-mode="local">
-        <div class="m-icon">⇄</div>
-        <div class="m-title">Locale, passa il telefono</div>
-        <div class="m-desc">2–5 giocatori sullo stesso dispositivo, a turno, mano nascosta agli altri.</div>
-      </button>
       <button class="mode-card disabled" data-mode="online">
         <span class="m-tag soon">Presto</span>
         <div class="m-icon">◇</div>
         <div class="m-title">Online con codice stanza</div>
         <div class="m-desc">Crea una stanza, condividi il codice, gioca da dispositivi diversi in tempo reale.</div>
       </button>
+      <button class="mode-card" data-mode="local">
+        <div class="m-icon">⇄</div>
+        <div class="m-title">Locale, passa il telefono</div>
+        <div class="m-desc">2–5 giocatori sullo stesso dispositivo, a turno, mano nascosta agli altri.</div>
+      </button>
+      <button class="mode-card" data-mode="ai">
+        <div class="m-icon">◐</div>
+        <div class="m-title">Contro l'IA</div>
+        <div class="m-desc">Sfida un'intelligenza artificiale su quattro livelli, da rilassato a spietato.</div>
+      </button>
     </div>
+    <button class="mode-card rules-card" id="btn-rules">
+      <div class="m-icon">?</div>
+      <div class="m-title">Come si gioca — regole</div>
+      <div class="m-desc">Pile ascendenti e discendenti, il trucco del 10, minimo carte a turno e condizioni di vittoria.</div>
+    </button>
+
+    <footer class="home-footer">
+      <button class="btn btn-ghost" id="btn-share">
+        <span class="share-icon">⤴</span> Condividi con gli amici
+      </button>
+    </footer>
   </section>
 
   <!-- ============ SETUP ============ -->
@@ -360,8 +425,11 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
 
     <div class="table">
       <div class="deck-info">
-        <div class="deck-visual"><span id="deck-count">98</span></div>
-        <div class="deck-count-label">carte nel mazzo</div>
+        <div class="deck-3d" id="deck-3d">
+          <div class="deck-ground-shadow" id="deck-shadow"></div>
+          <div class="deck-layers" id="deck-layers"></div>
+        </div>
+        <div class="deck-count-label" id="deck-label">98 carte nel mazzo</div>
       </div>
 
       <div class="piles-wrap">
@@ -420,6 +488,74 @@ button{ font-family:inherit; cursor:pointer; border:none; background:none; color
     </div>
   </div>
 
+  <!-- rules modal -->
+  <div class="modal-backdrop hidden" id="rules-backdrop">
+    <div class="modal rules-modal">
+      <button class="icon-btn rules-close" id="rules-close">✕</button>
+      <h2 style="text-align:left;">Come si gioca</h2>
+      <p style="text-align:left;">Un gioco cooperativo: non ci sono avversari, solo la sequenza da tenere in vita il più a lungo possibile — insieme.</p>
+      <div class="rules-body">
+        <div class="rule-item">
+          <div class="rule-icon asc">↑</div>
+          <div><b>Due pile ascendenti.</b> Ogni carta giocata deve essere <i>più alta</i> di quella in cima, oppure esattamente <b>10 in meno</b>.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon desc">↓</div>
+          <div><b>Due pile discendenti.</b> Ogni carta giocata deve essere <i>più bassa</i> di quella in cima, oppure esattamente <b>10 in più</b>.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon trick">10</div>
+          <div><b>Il trucco del 10.</b> Usalo per far tornare indietro una pila e ridarle margine: è l'unica eccezione alla regola crescente/decrescente.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon talk">"</div>
+          <div><b>Comunicazione.</b> Si possono dare indicazioni come <i>"questa pila mi serve"</i> o <i>"aspetta prima di giocare qui"</i> — ma mai rivelare le carte in mano, tipo <i>"ho il 47"</i> o <i>"gioca il 53"</i>.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon min">2</div>
+          <div><b>Minimo carte a turno.</b> Devi giocare almeno 2 carte per turno (basta 1 quando il mazzo è esaurito), poi peschi per tornare a mano piena.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon win">✓</div>
+          <div><b>Vittoria condivisa.</b> Si vince quando il mazzo finisce e tutte le mani sono vuote. Si perde se un giocatore non ha più mosse legali sufficienti a raggiungere il minimo.</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon var">1–100</div>
+          <div><b>Varianti.</b> Originale: carte da 2 a 99, pile che partono da 1 e 100. Corta: carte da 2 a 49, pile da 1 e 50 — più breve e più facile da vincere.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- share modal -->
+  <div class="modal-backdrop hidden" id="share-backdrop">
+    <div class="modal share-modal">
+      <button class="icon-btn rules-close" id="share-close">✕</button>
+      <h2 style="text-align:left;">Invita i tuoi amici</h2>
+      <p style="text-align:left;">Inquadra il QR code o copia il link e mandalo in chat: si apre subito nel browser, niente da installare.</p>
+      <div class="qr-frame">
+        <img src="data:image/png;base64,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" alt="QR code del gioco" />
+      </div>
+      <div class="link-row">
+        <input type="text" id="share-link-input" value="https://yeezikdev.github.io/thegame/" readonly>
+        <button class="btn btn-primary" id="copy-link-btn">Copia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- exit confirm modal -->
+  <div class="modal-backdrop hidden" id="exit-backdrop">
+    <div class="modal">
+      <div class="result-icon" style="color:var(--ivory-dim);">↩</div>
+      <h2>Uscire dalla partita?</h2>
+      <p>La partita in corso andrà persa. Sei sicuro di voler tornare al menu?</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="exit-cancel">Annulla</button>
+        <button class="btn btn-primary" id="exit-confirm">Esci al menu</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 </div>
 
@@ -446,6 +582,7 @@ const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
 let pendingMode = null;
 
 $$('.mode-card').forEach(card=>{
+  if(!card.dataset.mode) return; // skip the rules tile, handled separately
   card.addEventListener('click', ()=>{
     if(card.classList.contains('disabled')) return;
     pendingMode = card.dataset.mode;
@@ -504,7 +641,51 @@ $('#setup-start').addEventListener('click', ()=>{
 });
 function aiDisplayName(d){ return {easy:'IA Rilassata', medium:'IA Attenta', hard:'IA Esperta', crazy:'IA Implacabile'}[d]; }
 
-$('#btn-exit').addEventListener('click', ()=>{ if(confirm('Uscire dalla partita in corso?')){ show('screen-home'); hide('screen-game'); } });
+$('#btn-share').addEventListener('click', ()=>{ document.getElementById('share-backdrop').classList.remove('hidden'); });
+$('#share-close').addEventListener('click', ()=>{ document.getElementById('share-backdrop').classList.add('hidden'); });
+$('#share-backdrop').addEventListener('click', (e)=>{ if(e.target.id==='share-backdrop') e.currentTarget.classList.add('hidden'); });
+
+$('#copy-link-btn').addEventListener('click', async ()=>{
+  const input = $('#share-link-input');
+  const link = input.value;
+  const btn = $('#copy-link-btn');
+  let copied = false;
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(link);
+      copied = true;
+    }
+  }catch(e){ /* fall through to legacy method */ }
+  if(!copied){
+    try{
+      input.removeAttribute('readonly');
+      input.focus(); input.select(); input.setSelectionRange(0, link.length);
+      copied = document.execCommand('copy');
+      input.setAttribute('readonly','');
+    }catch(e){ copied = false; }
+  }
+  if(copied){
+    const original = btn.textContent;
+    btn.textContent = 'Copiato ✓';
+    btn.classList.add('copied');
+    toast('Link copiato negli appunti');
+    setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+  } else {
+    input.removeAttribute('readonly'); input.focus(); input.select();
+    toast('Seleziona e copia manualmente', true);
+  }
+});
+
+$('#btn-rules').addEventListener('click', ()=>{ document.getElementById('rules-backdrop').classList.remove('hidden'); });
+$('#rules-close').addEventListener('click', ()=>{ document.getElementById('rules-backdrop').classList.add('hidden'); });
+$('#rules-backdrop').addEventListener('click', (e)=>{ if(e.target.id==='rules-backdrop') e.currentTarget.classList.add('hidden'); });
+
+$('#btn-exit').addEventListener('click', ()=>{ document.getElementById('exit-backdrop').classList.remove('hidden'); });
+$('#exit-cancel').addEventListener('click', ()=>{ document.getElementById('exit-backdrop').classList.add('hidden'); });
+$('#exit-confirm').addEventListener('click', ()=>{
+  document.getElementById('exit-backdrop').classList.add('hidden');
+  show('screen-home'); hide('screen-game');
+});
 $('#modal-menu').addEventListener('click', ()=>{ hideModal(); show('screen-home'); hide('screen-game'); });
 $('#modal-retry').addEventListener('click', ()=>{ hideModal(); startGame(S.lastOptions); });
 
@@ -548,7 +729,9 @@ function startGame(options){
     gameOver:false, won:false,
     lastOptions: options,
     undoStack:[],
-    aiThinking:false
+    aiThinking:false,
+    deckMaxSize: deck.length,
+    prevDeckLen: deck.length
   };
   selectedCard = null;
 
@@ -739,6 +922,45 @@ function maybeRunAITurn(){
 }
 
 /* ===================== RENDER ===================== */
+function renderDeckStack(){
+  const wrap = $('#deck-layers');
+  const shadow = $('#deck-shadow');
+  const label = $('#deck-label');
+  const total = S.deckMaxSize || 1;
+  const ratio = Math.max(0, Math.min(1, S.deck.length / total));
+  const MAX_LAYERS = 9;
+  const n = S.deck.length<=0 ? 0 : Math.max(1, Math.round(ratio * MAX_LAYERS));
+
+  wrap.innerHTML='';
+  for(let i=0;i<n;i++){
+    const layer = document.createElement('div');
+    const isTop = i===n-1;
+    layer.className = 'deck-layer' + (isTop ? ' top' : '');
+    const dx = i*1.3, dy = -i*1.7;
+    layer.style.transform = `translate(calc(-50% + ${dx}px), ${dy}px)`;
+    layer.style.filter = `brightness(${0.68 + (i/MAX_LAYERS)*0.55})`;
+    layer.style.zIndex = String(i);
+    if(isTop){
+      const motif = document.createElement('div');
+      motif.className = 'deck-motif';
+      layer.appendChild(motif);
+    }
+    wrap.appendChild(layer);
+  }
+
+  shadow.style.opacity = S.deck.length<=0 ? '0' : String(0.35 + ratio*0.5);
+  shadow.style.transform = `translateX(-50%) scale(${0.45 + ratio*0.65})`;
+
+  label.textContent = S.deck.length===0 ? 'Mazzo esaurito' : `${S.deck.length} cart${S.deck.length===1?'a':'e'} nel mazzo`;
+
+  if(S.prevDeckLen !== S.deck.length){
+    wrap.classList.remove('settle');
+    void wrap.offsetWidth; // reflow to restart animation
+    wrap.classList.add('settle');
+    S.prevDeckLen = S.deck.length;
+  }
+}
+
 function renderAll(){
   if(!S) return;
   const player = S.players[S.currentPlayerIndex];
@@ -747,7 +969,7 @@ function renderAll(){
   $('#min-count').textContent = minRequired();
   $('#played-count').textContent = S.cardsPlayedThisTurn;
   $('#pill-min').classList.toggle('min-ok', canEndTurn());
-  $('#deck-count').textContent = S.deck.length;
+  renderDeckStack();
 
   S.piles.forEach((pile,i)=>{
     const el = $(`.pile[data-pile="${i}"]`);
